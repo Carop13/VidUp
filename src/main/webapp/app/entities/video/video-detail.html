@@ -1,0 +1,39 @@
+
+<div>
+    <h2><span>Video</span> {{vm.video.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span>Path</span></dt>
+        <dd>
+            <span>{{vm.video.path}}</span>
+        </dd>
+        <dt><span>Description</span></dt>
+        <dd>
+            <span>{{vm.video.description}}</span>
+        </dd>
+        <dt><span>Title</span></dt>
+        <dd>
+            <span>{{vm.video.title}}</span>
+        </dd>
+        <dt><span>Created Date</span></dt>
+        <dd>
+            <span>{{vm.video.createdDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>User</span></dt>
+        <dd>
+            <a ui-sref="jhi-user-detail({id:vm.video.user.id})">{{vm.video.user.id}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button" ui-sref="video-detail.edit({id:vm.video.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm"> Edit</span>
+    </button>
+</div>
