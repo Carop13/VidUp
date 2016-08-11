@@ -80,11 +80,10 @@
             <input type="hidden" class="form-control" name="image" id="field_image"
                     ng-model="vm.video.image"
                     required>
-
-            <div ng-show="editForm.image.$invalid">
+            <div ng-show="editForm.createdDate.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.image.$error.required">
-                    Requisito obligatorio
+                    ng-show="editForm.createdDate.$error.required">
+                    This field is required.
                 </p>
             </div>
         </div>
