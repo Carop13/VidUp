@@ -11,6 +11,7 @@
         var vm = this;
 
         vm.video = entity;
+        console.log(vm.video);
         vm.previousState = previousState.name;
 
         var unsubscribe = $rootScope.$on('vidUpApp:videoUpdate', function(event, result) {
