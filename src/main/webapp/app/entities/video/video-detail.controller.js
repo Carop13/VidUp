@@ -5,9 +5,9 @@
         .module('vidUpApp')
         .controller('VideoDetailController', VideoDetailController);
 
-    VideoDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Video', 'Jhi_user'];
+    VideoDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Video', 'User'];
 
-    function VideoDetailController($scope, $rootScope, $stateParams, previousState, entity, Video, Jhi_user) {
+    function VideoDetailController($scope, $rootScope, $stateParams, previousState, entity, Video, User) {
         var vm = this;
 
         vm.video = entity;

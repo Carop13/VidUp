@@ -62,7 +62,7 @@
 
         <div class="form-group">
             <label for="field_user">User</label>
-            <select class="form-control" id="field_user" name="user" ng-model="vm.video.user" ng-options="jhi_user as jhi_user.id for jhi_user in vm.jhi_users track by jhi_user.id">
+            <select class="form-control" id="field_user" name="user" ng-model="vm.video.user" ng-options="user as user.firstName for user in vm.users track by user.id">
                 <option value=""></option>
             </select>
         </div>
