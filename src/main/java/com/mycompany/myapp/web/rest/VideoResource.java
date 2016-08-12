@@ -2,6 +2,7 @@ package com.mycompany.myapp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.mycompany.myapp.domain.Video;
+import com.mycompany.myapp.repository.VideoRepository;
 import com.mycompany.myapp.service.VideoService;
 import com.mycompany.myapp.web.rest.util.HeaderUtil;
 import com.mycompany.myapp.web.rest.util.PaginationUtil;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -21,6 +23,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * REST controller for managing Video.
@@ -30,10 +41,19 @@ import java.util.Optional;
 public class VideoResource {
 
     private final Logger log = LoggerFactory.getLogger(VideoResource.class);
-        
+
     @Inject
     private VideoService videoService;
-    
+    @Value("${image.folder}")
+    private String imageFolderPath;
+
+    private File imageFolder;
+
+  @Inject
+   private VideoRepository videoRepository;
+
+
+
     /**
      * POST  /videos : Create a new video.
      *
@@ -94,7 +114,7 @@ public class VideoResource {
     public ResponseEntity<List<Video>> getAllVideos(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Videos");
-        Page<Video> page = videoService.findAll(pageable); 
+        Page<Video> page = videoService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/videos");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -133,6 +153,61 @@ public class VideoResource {
         log.debug("REST request to delete Video : {}", id);
         videoService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("video", id.toString())).build();
+    }
+
+
+    @RequestMapping(value="/videosUpload", method=RequestMethod.POST, headers = "content-type=multipart/*")
+        public ResponseEntity<Void> handleFileUpload(
+            @RequestParam Long videoId,
+        		@RequestParam("caption") String caption,
+                @RequestParam("file") MultipartFile file) {
+            if (!file.isEmpty()) {
+                String imageFileName = null;
+                try {
+                    imageFileName = "Video_" + System.currentTimeMillis() + getExtension(file);
+                    File imageFile = new File(getImageFolder(), imageFileName);
+                    byte[] bytes = new byte[0];
+                    bytes = file.getBytes();
+                    FileOutputStream stream = new FileOutputStream(imageFile);
+                    stream.write(bytes);
+                    stream.close();
+
+                    // persist video
+                    Video video = videoRepository.findOne(videoId);
+                    video.setPath(imageFileName);
+                    videoRepository.save(video);
+                }catch(Exception e){
+                    e.printStackTrace();
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+                try {
+                	return ResponseEntity.ok().build();
+                } catch (Exception e) {
+                	return ResponseEntity.badRequest().build();
+                }
+            } else {
+            	return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+    private String getExtension(MultipartFile file) throws Exception {
+        int lastDot = file.getOriginalFilename().lastIndexOf('.');
+        if(lastDot == -1){
+            return "png";
+        }
+        String extension = file.getOriginalFilename().substring(lastDot);
+        return extension;
+    }
+
+
+    public File getImageFolder() throws IOException {
+            if(imageFolder==null){
+                imageFolder = new File(imageFolderPath);
+                if(!imageFolder.exists()){
+                    imageFolder.mkdirs();
+                }
+            }
+            return imageFolder;
     }
 
 }
