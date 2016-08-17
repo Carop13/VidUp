@@ -60,25 +60,25 @@
             </div>
         </div>
 
-        <div class="form-group" ngf-drop ngf-change="vm.setImage($files, vm.video)" ngf-accept="'image/*'">
+        <div class="form-group" ngf-drop ngf-change="vm.setImage($files, vm.video.image)" ngf-accept="'image/*'">
             <label for="field_image">Foto</label>
-            <div>
+            <!--<div>
                 <img data-ng-src="{{'data:image/*;base64,' + vm.video.image}}" style="max-height: 100px;" ng-if="vm.video.image"/>
                 <div class="help-block clearfix">
-                    <span class="pull-left">{{byteSize(vm.video.image)}}</span>
-                    <button ng-click="vm.video.image=null"
+                    <span class="pull-left">{{vm.byteSize(vm.video.image)}}</span>
+                    <button ng-click="vm.video.image = null"
                             ng-if="vm.video.image"
                             class="btn btn-default btn-xs pull-right">
                         <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 </div>
                 <button type="file" ngf-select class="btn btn-default btn-block"
-                        ngf-change="vm.setImage($files, vm.video)" accept="image/*">
+                         accept="image/*" ng-model="vm.video.image">
                     Subir imagen
                 </button>
-            </div>
-            <input type="hidden" class="form-control" name="image" id="field_image"
-                    ng-model="vm.video.image"
+            </div>-->
+            <input type="file" ngf-select class="btn btn-default btn-block" name="image" id="field_image"
+                    ng-model="vm.video.image" accept="image/*"
                     required>
             <div ng-show="editForm.createdDate.$invalid">
                 <p class="help-block"

@@ -3,7 +3,7 @@
 
     angular
         .module('vidUpApp', [
-            'ngStorage', 
+            'ngStorage',
             'ngResource',
             'ngCookies',
             'ngAria',
@@ -20,7 +20,8 @@
 
     run.$inject = ['stateHandler'];
 
-    function run(stateHandler) {
+    function run(stateHandler, $http) {
         stateHandler.initialize();
+        //$http.defaults.headers.common['Content-Type'] = 'multipart/form-data';
     }
 })();
