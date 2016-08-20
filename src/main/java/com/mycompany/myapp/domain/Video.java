@@ -1,7 +1,5 @@
 package com.mycompany.myapp.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -14,7 +12,6 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "video")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Video implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,21 +21,29 @@ public class Video implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "path", nullable = false)
-    private String path;
+    @Lob
+    @Column(name = "upload_video", nullable = false)
+    private byte[] uploadVideo;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "upload_video_content_type", nullable = false)
+    private String uploadVideoContentType;
 
     @NotNull
     @Column(name = "title", nullable = false)
     private String title;
 
-    @NotNull
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "created_date")
     private LocalDate createdDate;
 
+    @NotNull
+    @Column(name = "author", nullable = false)
+    private String author;
+
     @ManyToOne
+    @NotNull
     private User user;
 
     public Long getId() {
@@ -49,20 +54,20 @@ public class Video implements Serializable {
         this.id = id;
     }
 
-    public String getPath() {
-        return path;
+    public byte[] getUploadVideo() {
+        return uploadVideo;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setUploadVideo(byte[] uploadVideo) {
+        this.uploadVideo = uploadVideo;
     }
 
-    public String getDescription() {
-        return description;
+    public String getUploadVideoContentType() {
+        return uploadVideoContentType;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setUploadVideoContentType(String uploadVideoContentType) {
+        this.uploadVideoContentType = uploadVideoContentType;
     }
 
     public String getTitle() {
@@ -73,12 +78,28 @@ public class Video implements Serializable {
         this.title = title;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public LocalDate getCreatedDate() {
         return createdDate;
     }
 
     public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public User getUser() {
@@ -113,10 +134,12 @@ public class Video implements Serializable {
     public String toString() {
         return "Video{" +
             "id=" + id +
-            ", path='" + path + "'" +
-            ", description='" + description + "'" +
+            ", uploadVideo='" + uploadVideo + "'" +
+            ", uploadVideoContentType='" + uploadVideoContentType + "'" +
             ", title='" + title + "'" +
+            ", description='" + description + "'" +
             ", createdDate='" + createdDate + "'" +
+            ", author='" + author + "'" +
             '}';
     }
 }

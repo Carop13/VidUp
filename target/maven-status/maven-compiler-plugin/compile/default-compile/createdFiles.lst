@@ -41,7 +41,6 @@ com/mycompany/myapp/config/MetricsConfiguration$SparkRegistry.class
 com/mycompany/myapp/web/filter/CachingHttpHeadersFilter.class
 com/mycompany/myapp/web/rest/ProfileInfoResource$ProfileInfoResponse.class
 com/mycompany/myapp/config/JHipsterProperties$Security.class
-com/mycompany/myapp/service/VideoService.class
 com/mycompany/myapp/web/rest/LogsResource.class
 com/mycompany/myapp/domain/util/JSR310PersistenceConverters$LocalDateConverter.class
 com/mycompany/myapp/security/UserDetailsService.class
@@ -49,7 +48,6 @@ com/mycompany/myapp/aop/logging/LoggingAspect.class
 com/mycompany/myapp/security/AjaxAuthenticationSuccessHandler.class
 com/mycompany/myapp/service/AuditEventService.class
 com/mycompany/myapp/config/JHipsterProperties$Http$Cache.class
-com/mycompany/myapp/config/JHipsterProperties$Cache$Ehcache.class
 com/mycompany/myapp/config/MetricsConfiguration.class
 com/mycompany/myapp/config/JHipsterProperties$Mail.class
 com/mycompany/myapp/domain/util/JSR310DateConverters$DateToLocalDateConverter.class

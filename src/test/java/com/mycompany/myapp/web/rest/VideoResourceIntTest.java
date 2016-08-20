@@ -3,7 +3,6 @@ package com.mycompany.myapp.web.rest;
 import com.mycompany.myapp.VidUpApp;
 import com.mycompany.myapp.domain.Video;
 import com.mycompany.myapp.repository.VideoRepository;
-import com.mycompany.myapp.service.VideoService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -44,21 +44,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 public class VideoResourceIntTest {
 
-    private static final String DEFAULT_PATH = "AAAAA";
-    private static final String UPDATED_PATH = "BBBBB";
-    private static final String DEFAULT_DESCRIPTION = "AAAAA";
-    private static final String UPDATED_DESCRIPTION = "BBBBB";
+
+    private static final byte[] DEFAULT_UPLOAD_VIDEO = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_UPLOAD_VIDEO = TestUtil.createByteArray(2, "1");
+    private static final String DEFAULT_UPLOAD_VIDEO_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_UPLOAD_VIDEO_CONTENT_TYPE = "image/png";
     private static final String DEFAULT_TITLE = "AAAAA";
     private static final String UPDATED_TITLE = "BBBBB";
+    private static final String DEFAULT_DESCRIPTION = "AAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBB";
 
     private static final LocalDate DEFAULT_CREATED_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_CREATED_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final String DEFAULT_AUTHOR = "AAAAA";
+    private static final String UPDATED_AUTHOR = "BBBBB";
 
     @Inject
     private VideoRepository videoRepository;
-
-    @Inject
-    private VideoService videoService;
 
     @Inject
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -74,7 +76,7 @@ public class VideoResourceIntTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         VideoResource videoResource = new VideoResource();
-        ReflectionTestUtils.setField(videoResource, "videoService", videoService);
+        ReflectionTestUtils.setField(videoResource, "videoRepository", videoRepository);
         this.restVideoMockMvc = MockMvcBuilders.standaloneSetup(videoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -83,10 +85,12 @@ public class VideoResourceIntTest {
     @Before
     public void initTest() {
         video = new Video();
-        video.setPath(DEFAULT_PATH);
-        video.setDescription(DEFAULT_DESCRIPTION);
+        video.setUploadVideo(DEFAULT_UPLOAD_VIDEO);
+        video.setUploadVideoContentType(DEFAULT_UPLOAD_VIDEO_CONTENT_TYPE);
         video.setTitle(DEFAULT_TITLE);
+        video.setDescription(DEFAULT_DESCRIPTION);
         video.setCreatedDate(DEFAULT_CREATED_DATE);
+        video.setAuthor(DEFAULT_AUTHOR);
     }
 
     @Test
@@ -105,18 +109,20 @@ public class VideoResourceIntTest {
         List<Video> videos = videoRepository.findAll();
         assertThat(videos).hasSize(databaseSizeBeforeCreate + 1);
         Video testVideo = videos.get(videos.size() - 1);
-        assertThat(testVideo.getPath()).isEqualTo(DEFAULT_PATH);
-        assertThat(testVideo.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testVideo.getUploadVideo()).isEqualTo(DEFAULT_UPLOAD_VIDEO);
+        assertThat(testVideo.getUploadVideoContentType()).isEqualTo(DEFAULT_UPLOAD_VIDEO_CONTENT_TYPE);
         assertThat(testVideo.getTitle()).isEqualTo(DEFAULT_TITLE);
+        assertThat(testVideo.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testVideo.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testVideo.getAuthor()).isEqualTo(DEFAULT_AUTHOR);
     }
 
     @Test
     @Transactional
-    public void checkPathIsRequired() throws Exception {
+    public void checkUploadVideoIsRequired() throws Exception {
         int databaseSizeBeforeTest = videoRepository.findAll().size();
         // set the field null
-        video.setPath(null);
+        video.setUploadVideo(null);
 
         // Create the Video, which fails.
 
@@ -149,10 +155,10 @@ public class VideoResourceIntTest {
 
     @Test
     @Transactional
-    public void checkCreatedDateIsRequired() throws Exception {
+    public void checkAuthorIsRequired() throws Exception {
         int databaseSizeBeforeTest = videoRepository.findAll().size();
         // set the field null
-        video.setCreatedDate(null);
+        video.setAuthor(null);
 
         // Create the Video, which fails.
 
@@ -176,10 +182,12 @@ public class VideoResourceIntTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(video.getId().intValue())))
-                .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH.toString())))
-                .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+                .andExpect(jsonPath("$.[*].uploadVideoContentType").value(hasItem(DEFAULT_UPLOAD_VIDEO_CONTENT_TYPE)))
+                .andExpect(jsonPath("$.[*].uploadVideo").value(hasItem(Base64Utils.encodeToString(DEFAULT_UPLOAD_VIDEO))))
                 .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
-                .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())));
+                .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+                .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+                .andExpect(jsonPath("$.[*].author").value(hasItem(DEFAULT_AUTHOR.toString())));
     }
 
     @Test
@@ -193,10 +201,12 @@ public class VideoResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(video.getId().intValue()))
-            .andExpect(jsonPath("$.path").value(DEFAULT_PATH.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.uploadVideoContentType").value(DEFAULT_UPLOAD_VIDEO_CONTENT_TYPE))
+            .andExpect(jsonPath("$.uploadVideo").value(Base64Utils.encodeToString(DEFAULT_UPLOAD_VIDEO)))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
-            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.author").value(DEFAULT_AUTHOR.toString()));
     }
 
     @Test
@@ -211,17 +221,18 @@ public class VideoResourceIntTest {
     @Transactional
     public void updateVideo() throws Exception {
         // Initialize the database
-        videoService.save(video);
-
+        videoRepository.saveAndFlush(video);
         int databaseSizeBeforeUpdate = videoRepository.findAll().size();
 
         // Update the video
         Video updatedVideo = new Video();
         updatedVideo.setId(video.getId());
-        updatedVideo.setPath(UPDATED_PATH);
-        updatedVideo.setDescription(UPDATED_DESCRIPTION);
+        updatedVideo.setUploadVideo(UPDATED_UPLOAD_VIDEO);
+        updatedVideo.setUploadVideoContentType(UPDATED_UPLOAD_VIDEO_CONTENT_TYPE);
         updatedVideo.setTitle(UPDATED_TITLE);
+        updatedVideo.setDescription(UPDATED_DESCRIPTION);
         updatedVideo.setCreatedDate(UPDATED_CREATED_DATE);
+        updatedVideo.setAuthor(UPDATED_AUTHOR);
 
         restVideoMockMvc.perform(put("/api/videos")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -232,18 +243,19 @@ public class VideoResourceIntTest {
         List<Video> videos = videoRepository.findAll();
         assertThat(videos).hasSize(databaseSizeBeforeUpdate);
         Video testVideo = videos.get(videos.size() - 1);
-        assertThat(testVideo.getPath()).isEqualTo(UPDATED_PATH);
-        assertThat(testVideo.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testVideo.getUploadVideo()).isEqualTo(UPDATED_UPLOAD_VIDEO);
+        assertThat(testVideo.getUploadVideoContentType()).isEqualTo(UPDATED_UPLOAD_VIDEO_CONTENT_TYPE);
         assertThat(testVideo.getTitle()).isEqualTo(UPDATED_TITLE);
+        assertThat(testVideo.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testVideo.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testVideo.getAuthor()).isEqualTo(UPDATED_AUTHOR);
     }
 
     @Test
     @Transactional
     public void deleteVideo() throws Exception {
         // Initialize the database
-        videoService.save(video);
-
+        videoRepository.saveAndFlush(video);
         int databaseSizeBeforeDelete = videoRepository.findAll().size();
 
         // Get the video

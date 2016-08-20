@@ -18,12 +18,6 @@
       "type": "com.mycompany.myapp.config.JHipsterProperties$Cache"
     },
     {
-      "name": "jhipster.cache.ehcache",
-      "sourceMethod": "getEhcache()",
-      "sourceType": "com.mycompany.myapp.config.JHipsterProperties$Cache",
-      "type": "com.mycompany.myapp.config.JHipsterProperties$Cache$Ehcache"
-    },
-    {
       "name": "jhipster.http",
       "sourceMethod": "getHttp()",
       "sourceType": "com.mycompany.myapp.config.JHipsterProperties",
@@ -133,12 +127,6 @@
       "name": "jhipster.async.queue-capacity",
       "sourceType": "com.mycompany.myapp.config.JHipsterProperties$Async",
       "type": "java.lang.Integer"
-    },
-    {
-      "defaultValue": "16M",
-      "name": "jhipster.cache.ehcache.max-bytes-local-heap",
-      "sourceType": "com.mycompany.myapp.config.JHipsterProperties$Cache$Ehcache",
-      "type": "java.lang.String"
     },
     {
       "defaultValue": 3600,

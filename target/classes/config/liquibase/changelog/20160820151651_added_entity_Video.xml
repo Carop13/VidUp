@@ -16,12 +16,19 @@
     <!--
         Added the entity Video.
     -->
-    <changeSet id="20160808231936-1" author="jhipster">
+    <changeSet id="20160820151651-1" author="jhipster">
         <createTable tableName="video">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="path" type="varchar(255)">
+            <column name="upload_video" type="longblob">
+                <constraints nullable="false" />
+            </column>
+            <column name="upload_video_content_type" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="title" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
             
@@ -29,16 +36,16 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="title" type="varchar(255)">
-                <constraints nullable="false" />
+            <column name="created_date" type="date">
+                <constraints nullable="true" />
             </column>
             
-            <column name="created_date" type="date">
+            <column name="author" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
             
             <column name="user_id" type="bigint">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - Jhipster will add columns here, do not remove-->

@@ -15,6 +15,7 @@ Hide ng-cloak on page load, https://docs.angularjs.org/api/ng/directive/ngCloak
 Developement Ribbon
 ========================================================================== */
 .ribbon {
+    display: none;
     background-color: #a00;
     box-shadow: 0 0 10px #888;
     left: -3.5em;

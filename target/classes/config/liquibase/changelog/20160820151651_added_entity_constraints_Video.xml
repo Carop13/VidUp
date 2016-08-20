@@ -6,7 +6,7 @@
     <!--
         Added the constraints for entity Video.
     -->
-    <changeSet id="20160808231936-2" author="jhipster">
+    <changeSet id="20160820151651-2" author="jhipster">
         
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="video"

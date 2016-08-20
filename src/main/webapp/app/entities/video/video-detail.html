@@ -4,28 +4,32 @@
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span>Path</span></dt>
+        <dt><span>Upload Video</span></dt>
         <dd>
-            <span>{{vm.video.path}}</span>
-        </dd>
-        <dt><span>Description</span></dt>
-        <dd>
-            <span>{{vm.video.description}}</span>
+            <div ng-if="vm.video.uploadVideo">
+                <a ng-click="vm.openFile(vm.video.uploadVideoContentType, vm.video.uploadVideo)">open</a>
+                {{vm.video.uploadVideoContentType}}, {{vm.byteSize(vm.video.uploadVideo)}}
+            </div>
         </dd>
         <dt><span>Title</span></dt>
         <dd>
             <span>{{vm.video.title}}</span>
         </dd>
+        <dt><span>Description</span></dt>
+        <dd>
+            <span>{{vm.video.description}}</span>
+        </dd>
         <dt><span>Created Date</span></dt>
         <dd>
             <span>{{vm.video.createdDate | date:'mediumDate'}}</span>
         </dd>
+        <dt><span>Author</span></dt>
+        <dd>
+            <span>{{vm.video.author}}</span>
+        </dd>
         <dt><span>User</span></dt>
         <dd>
-            <a ui-sref="jhi-user-detail({id:vm.video.user.id})">{{vm.video.user.firstName}}  {{vm.video.user.lastName}}</a>
-        </dd>
-        <dd>
-             <img data-ng-src="{{'data:image/*;base64,' + vm.video.image}}" style="max-height: 100px;" ng-if="vm.video.image"/>
+            {{vm.video.user.firstName}} {{vm.video.user.lastName}}
         </dd>
     </dl>
 

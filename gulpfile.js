@@ -1,4 +1,4 @@
-// Generated on 2016-08-08 using generator-jhipster 3.5.1
+// Generated on 2016-08-20 using generator-jhipster 3.5.1
 'use strict';
 
 var gulp = require('gulp'),
@@ -10,9 +10,6 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     replace = require('gulp-replace'),
     eslint = require('gulp-eslint'),
-    argv = require('yargs').argv,
-    gutil = require('gulp-util'),
-    protractor = require('gulp-protractor').protractor,
     es = require('event-stream'),
     flatten = require('gulp-flatten'),
     del = require('del'),
@@ -226,24 +223,6 @@ gulp.task('test', ['inject:test', 'ngconstant:dev'], function (done) {
     }, done).start();
 });
 
-/* to run individual suites pass `gulp itest --suite suiteName` */
-gulp.task('protractor', function () {
-    var configObj = {
-        configFile: config.test + 'protractor.conf.js'
-    };
-    if (argv.suite) {
-        configObj['args'] = ['--suite', argv.suite];
-    }
-    return gulp.src([])
-        .pipe(plumber({errorHandler: handleErrors}))
-        .pipe(protractor(configObj))
-        .on('error', function () {
-            gutil.log('E2E Tests failed');
-            process.exit(1);
-        });
-});
-
-gulp.task('itest', ['protractor']);
 
 gulp.task('watch', function () {
     gulp.watch('bower.json', ['install']);

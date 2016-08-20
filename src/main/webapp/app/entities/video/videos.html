@@ -17,25 +17,30 @@
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
-                    <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="path"><span>Path</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="description"><span>Description</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="title"><span>Title</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="createdDate"><span>Created Date</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="user.id"><span>User</span> <span class="glyphicon glyphicon-sort"></span></th>
+                <tr>
+                    <th><span>ID</span></th>
+                    <th><span>Upload Video</span></th>
+                    <th><span>Title</span></th>
+                    <th><span>Description</span></th>
+                    <th><span>Created Date</span></th>
+                    <th><span>Author</span></th>
+                    <th><span>User</span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="video in vm.videos track by video.id">
                     <td><a ui-sref="video-detail({id:video.id})">{{video.id}}</a></td>
-                    <td>{{video.path}}</td>
-                    <td>{{video.description}}</td>
-                    <td>{{video.title}}</td>
-                        <td>{{video.createdDate | date:'mediumDate'}}</td>
                     <td>
-                        <a ui-sref="jhi-user-detail({id:video.user.id})">{{video.user.firstName}}</a>
+                        <a ng-if="video.uploadVideo" ng-click="vm.openFile(video.uploadVideoContentType, video.uploadVideo)">open</a>
+                        <span ng-if="video.uploadVideo">{{video.uploadVideoContentType}}, {{vm.byteSize(video.uploadVideo)}}</span>
+                    </td>
+                    <td>{{video.title}}</td>
+                    <td>{{video.description}}</td>
+                        <td>{{video.createdDate | date:'mediumDate'}}</td>
+                    <td>{{video.author}}</td>
+                    <td>
+                         {{video.user.firstName}}
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
@@ -63,8 +68,4 @@
             </tbody>
         </table>
     </div>
-    <div class="text-center">
-        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
-    </div>
-    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>

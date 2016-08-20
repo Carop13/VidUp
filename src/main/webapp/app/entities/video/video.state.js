@@ -11,7 +11,7 @@
         $stateProvider
         .state('video', {
             parent: 'entity',
-            url: '/video?page&sort&search',
+            url: '/video',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'Videos'
@@ -23,27 +23,7 @@
                     controllerAs: 'vm'
                 }
             },
-            params: {
-                page: {
-                    value: '1',
-                    squash: true
-                },
-                sort: {
-                    value: 'id,asc',
-                    squash: true
-                },
-                search: null
-            },
             resolve: {
-                pagingParams: ['$stateParams', 'PaginationUtil', function ($stateParams, PaginationUtil) {
-                    return {
-                        page: PaginationUtil.parsePage($stateParams.page),
-                        sort: $stateParams.sort,
-                        predicate: PaginationUtil.parsePredicate($stateParams.sort),
-                        ascending: PaginationUtil.parseAscending($stateParams.sort),
-                        search: $stateParams.search
-                    };
-                }]
             }
         })
         .state('video-detail', {
@@ -115,10 +95,12 @@
                     resolve: {
                         entity: function () {
                             return {
-                                path: null,
-                                description: null,
+                                uploadVideo: null,
+                                uploadVideoContentType: null,
                                 title: null,
+                                description: null,
                                 createdDate: null,
+                                author: null,
                                 id: null
                             };
                         }
