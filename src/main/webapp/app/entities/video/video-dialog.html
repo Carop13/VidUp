@@ -26,8 +26,13 @@
                 </div>
                 <button type="file" ngf-select class="btn btn-default btn-block"
                         ngf-change="vm.setUploadVideo($file, vm.video)">
-                    Add File (Video / Image / Doc)
+                    Add Video File
                 </button>
+                <div ng-show="vm.badExtension">
+                    <p class="help-block alert-danger" ng-show="vm.badExtension">
+                        This is not a video file.
+                    </p>
+                </div>
             </div>
             <input type="hidden" class="form-control" name="uploadVideo" id="field_uploadVideo"
                     ng-model="vm.video.uploadVideo"
@@ -81,19 +86,6 @@
                 </p>
             </div>
         </div>
-
-        <!--<div class="form-group">
-            <label for="field_user">User</label>
-            <select class="form-control" id="field_user" name="user" ng-model="vm.video.user" ng-options="user as user.firstName for user in vm.users track by user.id" required>
-                <option value=""></option>
-            </select>
-        </div>
-        <div ng-show="editForm.user.$invalid">
-            <p class="help-block"
-                ng-show="editForm.user.$error.required">
-                This field is required.
-            </p>
-        </div>-->
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">

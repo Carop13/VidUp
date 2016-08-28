@@ -13,6 +13,7 @@
         vm.videos = [];
         vm.openFile = DataUtils.openFile;
         vm.byteSize = DataUtils.byteSize;
+        vm.searchText = '';
 
         loadAll();
 

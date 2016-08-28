@@ -22,6 +22,7 @@
                 vm.video.user = result;
             })
         })
+        vm.badExtension = false;
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -52,13 +53,21 @@
 
 
         vm.setUploadVideo = function ($file, video) {
-            if ($file) {
-                DataUtils.toBase64($file, function(base64Data) {
-                    $scope.$apply(function() {
-                        video.uploadVideo = base64Data;
-                        video.uploadVideoContentType = $file.type;
+            console.log($file);
+            var ext = $file.name.split('.').pop();
+            if(ext.toLowerCase() == 'm4v' || ext.toLowerCase() == 'avi' || 
+                ext.toLowerCase() == 'mpg' || ext.toLowerCase() == 'mp4'){
+                 vm.badExtension = false;
+                if ($file) {
+                    DataUtils.toBase64($file, function(base64Data) {
+                        $scope.$apply(function() {
+                            video.uploadVideo = base64Data;
+                            video.uploadVideoContentType = $file.type;
+                        });
                     });
-                });
+                }
+            }else{
+                vm.badExtension = true;
             }
         };
         vm.datePickerOpenStatus.createdDate = false;
